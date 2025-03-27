@@ -6,13 +6,14 @@
     import GuestOutlet from '@/outlet/GuestOutlet.vue'
     import CardComponent from '@/components/CardComponent.vue'
     import FormGroup from '@/components/FormGroup.vue'
-    import { VueSpinner} from 'vue3-spinners';
     import { storeToRefs } from 'pinia';
     import { useUserStore } from '@/store/user.js'
     import { useRouter } from 'vue-router';
 
     const toast = useToast()
     const router = useRouter()
+    const userStore = useUserStore()
+    const { user } = storeToRefs(userStore)
     
     const form = reactive({
         email: '',
@@ -20,7 +21,6 @@
     })
 
     const state = reactive({
-        user: null,
         isLoading: false,
         errorMsg: null
     })
@@ -37,8 +37,9 @@
             await axiosClient.get('/sanctum/csrf-cookie')
             await axiosClient.post('/login', payload)
             const response = await axiosClient.get('/api/user')
-            localStorage.setItem('user', JSON.stringify(response.data));
-            router.push({name:'home'})
+            user.value = response.data
+            router.push({name: 'home'})
+            toast.success(`Welcome back ${user.value?.first_name}`, { position: 'top-right' })
         } catch (error) {
             toast.error(error.response?.data?.message || 'Login failed', { position: 'top-right' });
         } finally {
@@ -50,7 +51,6 @@
 <template>
     <GuestOutlet>
         <CardComponent className="bg-white">
-            {{ state.user }}
             <form @submit.prevent="handleSubmit">
                 <h1 class="text-4xl text-blue-400 font-bold text-center mb-5">LOGIN</h1>
                 <FormGroup>
@@ -72,7 +72,7 @@
                 <FormGroup className="flex justify-end">
                     <button type="submit" class="bg-blue-400 p-2 text-white rounded">
                         <span v-if="state.isLoading">
-                            <VueSpinner />
+                            Loading <VueSpinner class="inline-block" />
                         </span>
                         <span v-else>
                             Login

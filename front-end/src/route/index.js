@@ -6,6 +6,8 @@ import { useUserStore } from '@/store/user.js'
 import { storeToRefs } from 'pinia'
 
 import HomeView  from '../view/HomeView.vue'
+import ProfileView from '../view/ProfileView.vue'
+
 import LoginView from '../view/LoginView.vue'
 import RegisterView from '../view/RegisterView.vue'
 import NotFound from '../view/NotFound.vue'
@@ -19,6 +21,11 @@ const routes = [
                 path: '/',
                 name: 'home',
                 component: HomeView
+            },
+            {
+                path:'/profile',
+                name: 'profile',
+                component: ProfileView
             }
         ],
         beforeEnter: (to, from, next) => {

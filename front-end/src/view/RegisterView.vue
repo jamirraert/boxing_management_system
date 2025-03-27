@@ -9,10 +9,15 @@
     import GuestOutlet from '@/outlet/GuestOutlet.vue'
     import CardComponent from '@/components/CardComponent.vue'
     import FormGroup from '@/components/FormGroup.vue'
+    import { useUserStore } from '../store/user';
+    import { storeToRefs } from 'pinia';
+    import { useRouter } from 'vue-router';
 
-    import { VueSpinner} from 'vue3-spinners';
 
     const toast = useToast()
+    const userStore = useUserStore()
+    const { user } = storeToRefs(userStore) 
+    const router = useRouter()
     
     const form = reactive({
         fname: '',
@@ -23,8 +28,16 @@
         password_confirm: ''
     })
 
+    const initForm = () => {
+        form.fname = '',
+        form.mname = '',
+        form.lname = '',
+        form.email = '',
+        form.password = '',
+        form.password_confirm = ''
+    }
+
     const state = reactive({
-        user: null,
         isLoading: false,
         errorMsg: null
     })
@@ -44,10 +57,15 @@
         try {
             await axiosClient.get('/sanctum/csrf-cookie')
             await axiosClient.post('/register', JSON.stringify(payload))
+            const response = await axiosClient.get('/api/user')
+            user.value = response.data
+            router.push({name: 'home'})
+            toast.success('Successfully logedin', {position: 'top-right'})
         } catch (error) {
             toast.error(error.response.data.message, {position: 'top-right'})
         } finally {
             state.isLoading = false
+            initForm()
         }
     }
 </script>
@@ -106,9 +124,9 @@
                         v-model="form.password_confirm">
                 </FormGroup>
                 <FormGroup className="flex justify-end">
-                    <button type="submit" class="bg-blue-400 p-2 text-white rounded">
+                        <button type="submit" class="bg-blue-400 p-2 text-white rounded">
                         <span v-if="state.isLoading">
-                            <VueSpinner />
+                             Loading <VueSpinner class="inline-block"/>
                         </span>
                         <span v-else>
                             Register
