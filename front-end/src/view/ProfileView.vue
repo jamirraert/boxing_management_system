@@ -9,8 +9,6 @@
 
             return name
     })
-
-    console.log(user.value)
 </script>
 <template>
     <div class="p-2">

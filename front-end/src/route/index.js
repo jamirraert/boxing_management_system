@@ -1,33 +1,34 @@
 import { createWebHistory, createRouter } from 'vue-router'
-
 import UserOutlet from '../outlet/UserOutlet.vue'
 
 import { useUserStore } from '@/store/user.js'
 import { storeToRefs } from 'pinia'
 
-import HomeView  from '../view/HomeView.vue'
-import ProfileView from '../view/ProfileView.vue'
-
 import LoginView from '../view/LoginView.vue'
 import RegisterView from '../view/RegisterView.vue'
 import NotFound from '../view/NotFound.vue'
+
+import { Menus } from '@/items/menus.js'
+
+const menus = Menus
+let modifiedMenus = []
+
+menus.forEach(menu => {
+    modifiedMenus.push({
+        path: menu.path,
+        name: menu.name,
+        component: menu.component,
+        meta: {
+            icon: menu.icon
+        }
+    })
+})
 
 const routes = [
     {
         path: '/',
         component: UserOutlet,
-        children: [
-            {
-                path: '/',
-                name: 'home',
-                component: HomeView
-            },
-            {
-                path:'/profile',
-                name: 'profile',
-                component: ProfileView
-            }
-        ],
+        children: modifiedMenus,
         beforeEnter: (to, from, next) => {
             const useStore = useUserStore()
             const { user } = storeToRefs(useStore)

@@ -1,14 +1,24 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router';
 import Breadcrumb from 'primevue/breadcrumb';
-import { BreadCrumb } from '../items/bread-crumbs';
 
-    const items = ref(BreadCrumb)
+const route = useRoute();
+
+console.log(route.name)
+
+    const items = ref([
+        {label: route.name}
+    ])
+
+    watch(route, (newRoute) => {
+        items.value = [{label: newRoute.name}]
+    }, { immediate: true })
 </script>
 <template>
      <div class="flex flex-start mb-5">
        <small>
-            <Breadcrumb :home="{ icon: 'pi pi-home' }" :model="items" />
+            <Breadcrumb :home="{ icon: route.meta.icon }" :model="items" />
        </small>
     </div>
 </template>

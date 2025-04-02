@@ -38,7 +38,7 @@
             await axiosClient.post('/login', payload)
             const response = await axiosClient.get('/api/user')
             user.value = response.data
-            router.push({name: 'home'})
+            router.push({name: 'dashboard'})
             toast.success(`Welcome back ${user.value?.first_name}`, { position: 'top-right' })
         } catch (error) {
             toast.error(error.response?.data?.message || 'Login failed', { position: 'top-right' });

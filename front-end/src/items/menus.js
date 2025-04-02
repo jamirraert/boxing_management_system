@@ -1,28 +1,19 @@
+import HomeView  from '@/view/HomeView.vue'
+import ProfileView from '@/view/ProfileView.vue'
+
 export const Menus = [
     {
-        label: 'Documents',
-        items: [
-            {
-                label: 'New',
-                icon: 'pi pi-plus'
-            },
-            {
-                label: 'Search',
-                icon: 'pi pi-search'
-            }
-        ]
+        name: "dashboard", 
+        path: "/", 
+        actor: ["admin", "user"],
+        icon: "pi pi-home",
+        component: HomeView
     },
     {
-        label: 'Profile',
-        items: [
-            {
-                label: 'Settings',
-                icon: 'pi pi-cog'
-            },
-            {
-                label: 'Logout',
-                icon: 'pi pi-sign-out'
-            }
-        ]
+        name: "profile", 
+        path: "/profile",
+        actor: ["admin", "user"],
+        icon: "pi pi-user",
+        component: ProfileView
     }
 ]
